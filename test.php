@@ -1,6 +1,7 @@
 <?php
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.dirname(__FILE__).'/../lib'.PATH_SEPARATOR.'/usr/share/pear');
+    require_once 'Geo.php';
     require_once 'Core.php';
     require_once 'Tiles.php';
     require_once 'PHPUnit.php';
@@ -65,10 +66,6 @@
         
     class Core_TestCase extends PHPUnit_TestCase
     {
-        function setUp()
-        {
-        }
-        
         function test_points()
         {
             $p = new Point(0, 1);
@@ -97,7 +94,35 @@
         }
     }
     
-    foreach(array('Tiles', 'Core') as $prefix)
+    class Geo_TestCase extends PHPUnit_TestCase
+    {
+        function test_transformations()
+        {
+            $t = new Transformation(0, 1, 0, 1, 0, 0);
+            $p = new Point(0, 1);
+            
+            $_p = $t->transform($p);
+            $this->assertEquals(1, $_p->x, 'Point X');
+            $this->assertEquals(0, $_p->y, 'Point Y');
+            
+            $__p = $t->untransform($_p);
+            $this->assertEquals($p->x, $__p->x, 'Point X');
+            $this->assertEquals($p->y, $__p->y, 'Point Y');
+
+            $t = new Transformation(1, 0, 1, 0, 1, 1);
+            $p = new Point(0, 0);
+            
+            $_p = $t->transform($p);
+            $this->assertEquals(1, $_p->x, 'Point X');
+            $this->assertEquals(1, $_p->y, 'Point Y');
+            
+            $__p = $t->untransform($_p);
+            $this->assertEquals($p->x, $__p->x, 'Point X');
+            $this->assertEquals($p->y, $__p->y, 'Point Y');
+        }
+    }
+    
+    foreach(array('Tiles', 'Core', 'Geo') as $prefix)
     {
         $suite  = new PHPUnit_TestSuite("{$prefix}_TestCase");
         $result = PHPUnit::run($suite);
