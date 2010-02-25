@@ -15,6 +15,11 @@
         {
             return sprintf('(%.3f, %.3f)', $this->x, $this->y);
         }
+        
+        function copy()
+        {
+            return new Point($this->x, $this->y);
+        }
     }
     
     class Coordinate

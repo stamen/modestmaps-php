@@ -120,6 +120,23 @@
             $this->assertEquals($p->x, $__p->x, 'Point X');
             $this->assertEquals($p->y, $__p->y, 'Point Y');
         }
+
+        function test_projections()
+        {
+            $m = new Mercator_Projection(10);
+
+            $c = $m->locationCoordinate(new Location(0, 0));
+            $this->assertEquals('(-0.000, 0.000 @10.000)', $c->toString(), 'Location to Coordinate');
+
+            $l = $m->coordinateLocation(new Coordinate(0, 0, 10));
+            $this->assertEquals('(0.000, 0.000)', $l->toString(), 'Coordinate to Location');
+
+            $c = $m->locationCoordinate(new Location(37, -122));
+            $this->assertEquals('(0.696, -2.129 @10.000)', $c->toString(), 'Location to Coordinate');
+
+            $l = $m->coordinateLocation(new Coordinate(0.696, -2.129, 10.000));
+            $this->assertEquals('(37.001, -121.983)', $l->toString(), 'Coordinate to Location');
+        }
     }
     
     foreach(array('Tiles', 'Core', 'Geo') as $prefix)
