@@ -1,6 +1,7 @@
 <?php
 
     ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.dirname(__FILE__).'/../lib'.PATH_SEPARATOR.'/usr/share/pear');
+    require_once 'Core.php';
     require_once 'Tiles.php';
     require_once 'PHPUnit.php';
     
@@ -60,14 +61,47 @@
             $this->assertEquals('0230102122203031', MMaps_Tiles_toMicrosoftAerial(10507, 25322, 16), 'toMicrosoftAerial');
             $this->assertEquals('0230102033330212', MMaps_Tiles_toMicrosoftAerial(10482, 25333, 16), 'toMicrosoftAerial');
         }
+    }
         
-        function tearDown()
+    class Core_TestCase extends PHPUnit_TestCase
+    {
+        function setUp()
         {
         }
-    }
+        
+        function test_points()
+        {
+            $p = new Point(0, 1);
 
-    $suite  = new PHPUnit_TestSuite('Tiles_TestCase');
-    $result = PHPUnit::run($suite);
-    echo $result->toString();
+            $this->assertEquals(0, $p->x, 'Point X');
+            $this->assertEquals(1, $p->y, 'Point Y');
+            $this->assertEquals('(0.000, 1.000)', $p->toString(), 'Point to string');
+        }
+
+        function test_coordinates()
+        {
+            $c = new Coordinate(0, 1, 2);
+
+            $this->assertEquals(0, $c->row, 'Coordinate Row');
+            $this->assertEquals(1, $c->column, 'Coordinate Column');
+            $this->assertEquals(2, $c->zoom, 'Coordinate Zoom');
+            $this->assertEquals('(0.000, 1.000 @2.000)', $c->toString(), 'Coordinate to string');
+
+            $this->assertEquals('(0.000, 2.000 @3.000)', $c->zoomTo(3)->toString(), 'Coordinate zoomed to a destination');
+            $this->assertEquals('(0.000, 0.500 @1.000)', $c->zoomTo(1)->toString(), 'Coordinate zoomed to a destination');
+
+            $this->assertEquals('(-1.000, 1.000 @2.000)', $c->up()->toString(), 'Coordinate panned');
+            $this->assertEquals('(0.000, 2.000 @2.000)', $c->right()->toString(), 'Coordinate panned');
+            $this->assertEquals('(1.000, 1.000 @2.000)', $c->down()->toString(), 'Coordinate panned');
+            $this->assertEquals('(0.000, 0.000 @2.000)', $c->left()->toString(), 'Coordinate panned');
+        }
+    }
+    
+    foreach(array('Tiles', 'Core') as $prefix)
+    {
+        $suite  = new PHPUnit_TestSuite("{$prefix}_TestCase");
+        $result = PHPUnit::run($suite);
+        echo $result->toString();
+    }
 
 ?>
