@@ -150,8 +150,8 @@
             $p = $m->locationPoint(new MMaps_Location(37.804274, -122.262940));
             $this->assertEquals('(370.724, 342.549)', $p->toString(), 'Map locationPoint');
             
-            //$l = $m->pointLocation($p);
-            //$this->assertEquals('(37.804, -122.263)', $l->toString(), 'Map pointLocation');
+            $l = $m->pointLocation($p);
+            $this->assertEquals('(37.804, -122.263)', $l->toString(), 'Map pointLocation');
         }
     }
     
