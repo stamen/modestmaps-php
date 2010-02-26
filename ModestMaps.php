@@ -2,7 +2,10 @@
 
     require_once 'Geo.php';
     require_once 'Core.php';
+<<<<<<< HEAD
     require_once 'Providers.php';
+=======
+>>>>>>> 11c30152b49ddd638411b01b6a0ee4f3b2559e4c
 
     class Modest_Map
     {
