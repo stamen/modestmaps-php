@@ -176,6 +176,15 @@
             $this->assertEquals('(800.000, 600.000)', $m->dimensions->toString(), 'Map dimensions');
             $this->assertEquals('(98.000, 40.000 @8.000)', $m->coordinate->toString(), 'Map coordinate');
             $this->assertEquals('(-251.000, -218.000)', $m->offset->toString(), 'Map offset');
+
+            $se = new MMaps_Location(36.893326, -121.208153);
+            $nw = new MMaps_Location(38.864246, -123.533554);
+            $d = new MMaps_Point(1600, 1200);
+            $m = MMaps_mapByExtent(new MMaps_OpenStreetMap_Provider(), $se, $nw, $d);
+
+            $this->assertEquals('(1600.000, 1200.000)', $m->dimensions->toString(), 'Map dimensions');
+            $this->assertEquals('(197.000, 81.000 @9.000)', $m->coordinate->toString(), 'Map coordinate');
+            $this->assertEquals('(-246.000, -179.000)', $m->offset->toString(), 'Map offset');
         }
     }
     
