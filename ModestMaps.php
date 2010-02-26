@@ -62,4 +62,25 @@
         }
     }
 
+    function MMaps_calculateMapCenter($provider, $centerCoord)
+    {
+        // initial tile coordinate
+        $initTileCoord = $centerCoord->container();
+        
+        // initial tile position, assuming centered tile well in grid
+        $initX = ($initTileCoord->column - $centerCoord->column) * $provider->tile_width;
+        $initY = ($initTileCoord->row - $centerCoord->row) * $provider->tile_height;
+        $initPoint = new MMaps_Point(round($initX), round($initY));
+        
+        return array($initTileCoord, $initPoint);
+    }
+    
+    function MMaps_mapByCenterZoom($provider, $center, $zoom, $dimensions)
+    {
+        $centerCoord = $provider->locationCoordinate($center)->zoomTo($zoom);
+        list($mapCoord, $mapOffset) = MMaps_calculateMapCenter($provider, $centerCoord);
+        
+        return new Modest_Map($provider, $dimensions, $mapCoord, $mapOffset);
+    }
+
 ?>
