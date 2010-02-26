@@ -186,6 +186,27 @@
             $this->assertEquals('(197.000, 81.000 @9.000)', $m->coordinate->toString(), 'Map coordinate');
             $this->assertEquals('(-246.000, -179.000)', $m->offset->toString(), 'Map offset');
         }
+
+        function test_map_by_extent_zoom()
+        {
+            $sw = new MMaps_Location(36.893326, -123.533554);
+            $ne = new MMaps_Location(38.864246, -121.208153);
+            $z = 10;
+            $m = MMaps_mapByExtentZoom(new MMaps_OpenStreetMap_Provider(), $sw, $ne, $z);
+
+            $this->assertEquals('(1693.000, 1818.000)', $m->dimensions->toString(), 'Map dimensions');
+            $this->assertEquals('(395.000, 163.000 @10.000)', $m->coordinate->toString(), 'Map coordinate');
+            $this->assertEquals('(-236.000, -102.000)', $m->offset->toString(), 'Map offset');
+
+            $se = new MMaps_Location(36.893326, -121.208153);
+            $nw = new MMaps_Location(38.864246, -123.533554);
+            $z = 9;
+            $m = MMaps_mapByExtentZoom(new MMaps_OpenStreetMap_Provider(), $sw, $ne, $z);
+
+            $this->assertEquals('(846.000, 909.000)', $m->dimensions->toString(), 'Map dimensions');
+            $this->assertEquals('(197.000, 81.000 @9.000)', $m->coordinate->toString(), 'Map coordinate');
+            $this->assertEquals('(-246.000, -179.000)', $m->offset->toString(), 'Map offset');
+        }
     }
     
     foreach(array('Tiles', 'Core', 'Geo', 'Map') as $prefix)

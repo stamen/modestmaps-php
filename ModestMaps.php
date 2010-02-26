@@ -142,4 +142,27 @@
         return new Modest_Map($provider, $dimensions, $mapCoord, $mapOffset);
     }
 
+    function MMaps_mapByExtentZoom($provider, $locationA, $locationB, $zoom)
+    {
+        // a coordinate per corner
+        $coordA = $provider->locationCoordinate($locationA)->zoomTo($zoom);
+        $coordB = $provider->locationCoordinate($locationB)->zoomTo($zoom);
+
+        // precise width and height in pixels
+        $width = abs($coordA->column - $coordB->column) * $provider->tile_width;
+        $height = abs($coordA->row - $coordB->row) * $provider->tile_height;
+    
+        // nearest pixel actually
+        $dimensions = new MMaps_Point(floor($width), floor($height));
+    
+        // projected center of the map
+        $centerCoord = new MMaps_Coordinate(($coordA->row + $coordB->row) / 2,
+                                            ($coordA->column + $coordB->column) / 2,
+                                            $zoom);
+    
+        list($mapCoord, $mapOffset) = MMaps_calculateMapCenter($provider, $centerCoord);
+
+        return new Modest_Map($provider, $dimensions, $mapCoord, $mapOffset);
+    }
+    
 ?>
