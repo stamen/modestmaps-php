@@ -165,6 +165,18 @@
             $this->assertEquals('(1582.000, 656.000 @12.000)', $m->coordinate->toString(), 'Map coordinate');
             $this->assertEquals('(-235.000, -196.000)', $m->offset->toString(), 'Map offset');
         }
+
+        function test_map_by_extent()
+        {
+            $sw = new MMaps_Location(36.893326, -123.533554);
+            $ne = new MMaps_Location(38.864246, -121.208153);
+            $d = new MMaps_Point(800, 600);
+            $m = MMaps_mapByExtent(new MMaps_OpenStreetMap_Provider(), $sw, $ne, $d);
+
+            $this->assertEquals('(800.000, 600.000)', $m->dimensions->toString(), 'Map dimensions');
+            $this->assertEquals('(98.000, 40.000 @8.000)', $m->coordinate->toString(), 'Map coordinate');
+            $this->assertEquals('(-251.000, -218.000)', $m->offset->toString(), 'Map offset');
+        }
     }
     
     foreach(array('Tiles', 'Core', 'Geo', 'Map') as $prefix)
