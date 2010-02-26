@@ -2,6 +2,7 @@
 
     require_once 'Geo.php';
     require_once 'Core.php';
+    require_once 'Providers.php';
 
     class Modest_Map
     {
@@ -60,6 +61,64 @@
             
             return $location;
         }
+        
+        function draw()
+        {
+            $coord = $this->coordinate->copy();
+            $corner = new MMaps_Point(floor($this->offset->x + $this->dimensions->x/2), floor($this->offset->y + $this->dimensions->y/2));
+            
+            while($corner->x > 0)
+            {
+                $corner->x -= $this->provider->tile_width;
+                $coord = $coord->left();
+            }
+            
+            while($corner->y > 0)
+            {
+                $corner->y -= $this->provider->tile_height;
+                $coord = $coord->up();
+            }
+            
+            $tiles = array();
+            $rowCoord = $coord->copy();
+            
+            for($y = $corner->y; $y < $this->dimensions->y; $y += $this->provider->tile_height)
+            {
+                $tileCoord = $rowCoord->copy();
+                
+                for($x = $corner->x; $x < $this->dimensions->x; $x += $this->provider->tile_width)
+                {
+                    $tiles[] = array($this->provider->getTileURLs($tileCoord), new MMaps_Point($x, $y));
+                    $tileCoord = $tileCoord->right();
+                }
+                
+                $rowCoord = $rowCoord->down();
+            }
+            
+            return MMaps_renderTiles($this->provider, $tiles, $this->dimensions->x, $this->dimensions->y);
+        }
+    }
+    
+    function MMaps_renderTiles($provider, $tiles, $width, $height)
+    {
+        $img = imagecreatetruecolor($width, $height);
+        
+        foreach($tiles as $tile)
+        {
+            list($urls, $position) = $tile;
+            
+            foreach($urls as $url)
+            {
+                $tile = @imagecreatefromstring(@file_get_contents($url));
+                
+                error_log("MMaps_renderTiles: {$url}");
+
+                if($tile !== false)
+                    @imagecopy($img, $tile, $position->x, $position->y, 0, 0, imagesx($tile), imagesy($tile));
+            }
+        }
+        
+        return $img;
     }
 
     function MMaps_calculateMapCenter($provider, $centerCoord)
