@@ -2,12 +2,12 @@
 
     require_once 'Core.php';
 
-    class Location
+    class MMaps_Location
     {
         var $lat;
         var $lon;
         
-        function Location($lat, $lon)
+        function MMaps_Location($lat, $lon)
         {
             $this->lat = $lat;
             $this->lon = $lon;
@@ -19,7 +19,7 @@
         }
     }
     
-    class Transformation
+    class MMaps_Transformation
     {
         var $ax;
         var $bx;
@@ -28,7 +28,7 @@
         var $by;
         var $cy;
         
-        function Transformation($ax, $bx, $cx, $ay, $by, $cy)
+        function MMaps_Transformation($ax, $bx, $cx, $ay, $by, $cy)
         {
             $this->ax = $ax;
             $this->bx = $bx;
@@ -40,26 +40,26 @@
         
         function transform($point)
         {
-            return new Point($this->ax * $point->x + $this->bx * $point->y + $this->cx,
-                             $this->ay * $point->x + $this->by * $point->y + $this->cy);
+            return new MMaps_Point($this->ax * $point->x + $this->bx * $point->y + $this->cx,
+                                   $this->ay * $point->x + $this->by * $point->y + $this->cy);
         }
         
         function untransform($point)
         {
-            return new Point(($point->x * $this->by - $point->y * $this->bx - $this->cx * $this->by + $this->cy * $this->bx) / ($this->ax * $this->by - $this->ay * $this->bx),
-                             ($point->x * $this->ay - $point->y * $this->ax - $this->cx * $this->ay + $this->cy * $this->ax) / ($this->bx * $this->ay - $this->by * $this->ax));
+            return new MMaps_Point(($point->x * $this->by - $point->y * $this->bx - $this->cx * $this->by + $this->cy * $this->bx) / ($this->ax * $this->by - $this->ay * $this->bx),
+                                   ($point->x * $this->ay - $point->y * $this->ax - $this->cx * $this->ay + $this->cy * $this->ax) / ($this->bx * $this->ay - $this->by * $this->ax));
         }
     }
 
-    class Linear_Projection
+    class MMaps_Linear_Projection
     {
         var $zoom;
         var $transformation;
         
-        function Linear_Projection($zoom, $transformation=null)
+        function MMaps_Linear_Projection($zoom, $transformation=null)
         {
             $this->zoom = $zoom;
-            $this->transformation = is_null($transformation) ? new Transformation(1, 0, 0, 0, 1, 0) : $transformation;
+            $this->transformation = is_null($transformation) ? new MMaps_Transformation(1, 0, 0, 0, 1, 0) : $transformation;
         }
         
         function rawProject($point)
@@ -88,32 +88,32 @@
         
         function locationCoordinate($location)
         {
-            $point = new Point(M_PI * $location->lon / 180, M_PI * $location->lat / 180);
+            $point = new MMaps_Point(M_PI * $location->lon / 180, M_PI * $location->lat / 180);
             $point = $this->project($point);
-            $coordinate = new Coordinate($point->y, $point->x, $this->zoom);
+            $coordinate = new MMaps_Coordinate($point->y, $point->x, $this->zoom);
             return $coordinate;
         }
         
         function coordinateLocation($coordinate)
         {
             $coordinate = $coordinate->zoomTo($this->zoom);
-            $point = new Point($coordinate->column, $coordinate->row);
+            $point = new MMaps_Point($coordinate->column, $coordinate->row);
             $point = $this->unproject($point);
-            $location = new Location(180 * $point->y / M_PI, 180 * $point->x / M_PI);
+            $location = new MMaps_Location(180 * $point->y / M_PI, 180 * $point->x / M_PI);
             return $location;
         }
     }
 
-    class Mercator_Projection extends Linear_Projection
+    class MMaps_Mercator_Projection extends MMaps_Linear_Projection
     {
         function rawProject($point)
         {
-            return new Point($point->x, log(tan(0.25 * M_PI + 0.5 * $point->y)));
+            return new MMaps_Point($point->x, log(tan(0.25 * M_PI + 0.5 * $point->y)));
         }
         
         function rawUnproject($point)
         {
-            return new Point($point->x, 2 * atan(pow(M_E, $point->y)) - 0.5 * M_PI);
+            return new MMaps_Point($point->x, 2 * atan(pow(M_E, $point->y)) - 0.5 * M_PI);
         }
     }
 
