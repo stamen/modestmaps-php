@@ -68,7 +68,7 @@
     {
         function test_points()
         {
-            $p = new Point(0, 1);
+            $p = new MMaps_Point(0, 1);
 
             $this->assertEquals(0, $p->x, 'Point X');
             $this->assertEquals(1, $p->y, 'Point Y');
@@ -77,7 +77,7 @@
 
         function test_coordinates()
         {
-            $c = new Coordinate(0, 1, 2);
+            $c = new MMaps_Coordinate(0, 1, 2);
 
             $this->assertEquals(0, $c->row, 'Coordinate Row');
             $this->assertEquals(1, $c->column, 'Coordinate Column');
@@ -98,8 +98,8 @@
     {
         function test_transformations()
         {
-            $t = new Transformation(0, 1, 0, 1, 0, 0);
-            $p = new Point(0, 1);
+            $t = new MMaps_Transformation(0, 1, 0, 1, 0, 0);
+            $p = new MMaps_Point(0, 1);
             
             $_p = $t->transform($p);
             $this->assertEquals(1, $_p->x, 'Point X');
@@ -109,8 +109,8 @@
             $this->assertEquals($p->x, $__p->x, 'Point X');
             $this->assertEquals($p->y, $__p->y, 'Point Y');
 
-            $t = new Transformation(1, 0, 1, 0, 1, 1);
-            $p = new Point(0, 0);
+            $t = new MMaps_Transformation(1, 0, 1, 0, 1, 1);
+            $p = new MMaps_Point(0, 0);
             
             $_p = $t->transform($p);
             $this->assertEquals(1, $_p->x, 'Point X');
@@ -123,18 +123,18 @@
 
         function test_projections()
         {
-            $m = new Mercator_Projection(10);
+            $m = new MMaps_Mercator_Projection(10);
 
-            $c = $m->locationCoordinate(new Location(0, 0));
+            $c = $m->locationCoordinate(new MMaps_Location(0, 0));
             $this->assertEquals('(-0.000, 0.000 @10.000)', $c->toString(), 'Location to Coordinate');
 
-            $l = $m->coordinateLocation(new Coordinate(0, 0, 10));
+            $l = $m->coordinateLocation(new MMaps_Coordinate(0, 0, 10));
             $this->assertEquals('(0.000, 0.000)', $l->toString(), 'Coordinate to Location');
 
-            $c = $m->locationCoordinate(new Location(37, -122));
+            $c = $m->locationCoordinate(new MMaps_Location(37, -122));
             $this->assertEquals('(0.696, -2.129 @10.000)', $c->toString(), 'Location to Coordinate');
 
-            $l = $m->coordinateLocation(new Coordinate(0.696, -2.129, 10.000));
+            $l = $m->coordinateLocation(new MMaps_Coordinate(0.696, -2.129, 10.000));
             $this->assertEquals('(37.001, -121.983)', $l->toString(), 'Coordinate to Location');
         }
     }

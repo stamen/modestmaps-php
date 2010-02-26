@@ -1,11 +1,11 @@
 <?php
 
-    class Point
+    class MMaps_Point
     {
         var $x;
         var $y;
         
-        function Point($x, $y)
+        function MMaps_Point($x, $y)
         {
             $this->x = $x;
             $this->y = $y;
@@ -18,17 +18,17 @@
         
         function copy()
         {
-            return new Point($this->x, $this->y);
+            return new MMaps_Point($this->x, $this->y);
         }
     }
     
-    class Coordinate
+    class MMaps_Coordinate
     {
         var $row;
         var $column;
         var $zoom;
         
-        function Coordinate($row, $column, $zoom)
+        function MMaps_Coordinate($row, $column, $zoom)
         {
             $this->row = $row;
             $this->column = $column;
@@ -47,46 +47,46 @@
         
         function copy()
         {
-            return new Coordinate($this->row, $this->column, $this->zoom);
+            return new MMaps_Coordinate($this->row, $this->column, $this->zoom);
         }
         
         function container()
         {
-            return new Coordinate(floor($this->row), floor($this->column), $this->zoom);
+            return new MMaps_Coordinate(floor($this->row), floor($this->column), $this->zoom);
         }
         
         function zoomTo($destination)
         {
-            return new Coordinate($this->row * pow(2, $destination - $this->zoom),
-                                  $this->column * pow(2, $destination - $this->zoom),
-                                  $destination);
+            return new MMaps_Coordinate($this->row * pow(2, $destination - $this->zoom),
+                                        $this->column * pow(2, $destination - $this->zoom),
+                                        $destination);
         }
         
         function zoomBy($distance)
         {
-            return new Coordinate($this->row * pow(2, $distance),
-                                  $this->column * pow(2, $distance),
-                                  $this->zoom + $distance);
+            return new MMaps_Coordinate($this->row * pow(2, $distance),
+                                        $this->column * pow(2, $distance),
+                                        $this->zoom + $distance);
         }
         
         function up($distance=1)
         {
-            return new Coordinate($this->row - $distance, $this->column, $this->zoom);
+            return new MMaps_Coordinate($this->row - $distance, $this->column, $this->zoom);
         }
         
         function right($distance=1)
         {
-            return new Coordinate($this->row, $this->column + $distance, $this->zoom);
+            return new MMaps_Coordinate($this->row, $this->column + $distance, $this->zoom);
         }
         
         function down($distance=1)
         {
-            return new Coordinate($this->row + $distance, $this->column, $this->zoom);
+            return new MMaps_Coordinate($this->row + $distance, $this->column, $this->zoom);
         }
         
         function left($distance=1)
         {
-            return new Coordinate($this->row, $this->column - $distance, $this->zoom);
+            return new MMaps_Coordinate($this->row, $this->column - $distance, $this->zoom);
         }
     }
 
