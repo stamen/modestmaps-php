@@ -153,6 +153,18 @@
             $l = $m->pointLocation($p);
             $this->assertEquals('(37.804, -122.263)', $l->toString(), 'Map pointLocation');
         }
+
+        function test_map_by_center_zoom()
+        {
+            $c = new MMaps_Location(37.804274, -122.262940);
+            $z = 12;
+            $d = new MMaps_Point(800, 600);
+            $m = MMaps_mapByCenterZoom(new MMaps_OpenStreetMap_Provider(), $c, $z, $d);
+            
+            $this->assertEquals('(800.000, 600.000)', $m->dimensions->toString(), 'Map dimensions');
+            $this->assertEquals('(1582.000, 656.000 @12.000)', $m->coordinate->toString(), 'Map coordinate');
+            $this->assertEquals('(-235.000, -196.000)', $m->offset->toString(), 'Map offset');
+        }
     }
     
     foreach(array('Tiles', 'Core', 'Geo', 'Map') as $prefix)
