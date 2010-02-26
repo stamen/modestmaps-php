@@ -4,6 +4,8 @@
     require_once 'Geo.php';
     require_once 'Core.php';
     require_once 'Tiles.php';
+    require_once 'Providers.php';
+    require_once 'ModestMaps.php';
     require_once 'PHPUnit.php';
     
     class Tiles_TestCase extends PHPUnit_TestCase
@@ -139,7 +141,21 @@
         }
     }
     
-    foreach(array('Tiles', 'Core', 'Geo') as $prefix)
+    class Map_TestCase extends PHPUnit_TestCase
+    {
+        function test_constructor()
+        {
+            $m = new Modest_Map(new MMaps_OpenStreetMap_Provider(), new MMaps_Point(600, 600), new MMaps_Coordinate(3165, 1313, 13), new MMaps_Point(-144, -94));
+
+            $p = $m->locationPoint(new MMaps_Location(37.804274, -122.262940));
+            $this->assertEquals('(370.724, 342.549)', $p->toString(), 'Map locationPoint');
+            
+            //$l = $m->pointLocation($p);
+            //$this->assertEquals('(37.804, -122.263)', $l->toString(), 'Map pointLocation');
+        }
+    }
+    
+    foreach(array('Tiles', 'Core', 'Geo', 'Map') as $prefix)
     {
         $suite  = new PHPUnit_TestSuite("{$prefix}_TestCase");
         $result = PHPUnit::run($suite);
