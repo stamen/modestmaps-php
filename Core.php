@@ -1,5 +1,7 @@
 <?php
 
+    define('MMaps_Coordinate_Max_Zoom', 25);
+
     class MMaps_Point
     {
         var $x;
